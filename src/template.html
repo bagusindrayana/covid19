@@ -8,6 +8,30 @@
 </head>
 
 <body translate="no">
+	<div class="loading" style="display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    background-color: black;
+    width: 100%;
+    height: 100vh;
+    z-index: 99;">
+		<div class="spinner-box">
+			<div class="blue-orbit leo">
+			</div>
+		  
+			<div class="green-orbit leo">
+			</div>
+			
+			<div class="red-orbit leo">
+			</div>
+			
+			<div class="white-orbit w1 leo">
+			</div><div class="white-orbit w2 leo">
+			</div><div class="white-orbit w3 leo">
+			</div>
+		</div>
+	</div>
 	<header class="text-white bg-dark">
 		<nav class="navbar text-white bg-dark navbar-dark">
 			<a class="navbar-brand" href="#"></a>
@@ -16,22 +40,35 @@
 		  </nav>
 	</header>
 	<main>
-		<div class="row m-0 p-0">
+		<div class="row m-0 p-0" >
 			<div class="col-md-6" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);border: solid 1px #0042ce;">
-				<p id="current"></p>
-				<canvas id="globe"class="mt-4"></canvas>
+				<div class="row " >
+					<div class="col-md-12">
+						<p id="current"></p>
+						<canvas id="globe"class="mt-4"></canvas>
+					</div>
+				</div>
+				
 			</div>
 			<div class="col-md-6 pt-4" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);border: solid 1px #0042ce;">
 				<div class="row">
 					<div class="col-md-12">
-						<grafik-chart chart-id="covidGlobal" header="Data Di Seluruh Dunia" footer="Sumber : <a href='https://api.covid19api.com/summary' target='_blank'>https://api.covid19api.com/summary</a>"></grafik-chart>
+						<grafik-chart chart-id="covidGlobal" chart-col="6" header="Data Di Seluruh Dunia" footer="Sumber : <a href='https://api.covid19api.com/summary' target='_blank'>https://api.covid19api.com/summary</a>"></grafik-chart>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col-md-12">
-						<div class="card text-white bg-dark mb-3">
-							<grafik-chart chart-id="covidIndonesia" header="Data Di Indonesia" footer="Sumber : <a href='https://api.kawalcorona.com/indonesia' target='_blank'>https://api.kawalcorona.com/indonesia</a>"></grafik-chart>
-						</div>
+						<grafik-chart chart-id="covidIndonesia" chart-col="6" header="Data Di Indonesia" footer="Sumber : <a href='https://api.covid19api.com/summary' target='_blank'>https://api.covid19api.com/summary</a>"></grafik-chart>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row m-0 p-0">
+			<div class="col-md-12 pt-4" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);border: solid 1px #0042ce;">
+				<div class="row">
+					<div class="col-md-12" >
+						<grafik-chart chart-id="covidCountry" header="Data Per Negara" chart-height="2000px" footer="Sumber : <a href='https://api.covid19api.com/summary' target='_blank'>https://api.covid19api.com/summary</a>" ></grafik-chart>
 					</div>
 				</div>
 			</div>

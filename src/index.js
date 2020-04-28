@@ -9,22 +9,37 @@ import versor from "./script/versor";
 import * as d3 from "d3";
 import * as topojson from "./script/topojson";
 
+$(document).ready(function(){
+    $(".loading").hide()
+})
+
 //custom element
 class GrafikChart extends HTMLElement {
     connectedCallback() {
         this.chartId = this.getAttribute("chart-id") || null;
         this.header = this.getAttribute("header") || null;
         this.footer = this.getAttribute("footer") || null;
+        this.chartHeight = this.getAttribute("chart-height") || null;
+        this.chartCol = this.getAttribute("chart-col") || 12;
       
         this.innerHTML = `
-            <div class="card text-white bg-dark mb-3">
+            <div class="card text-white bg-dark mb-3" >
                 <div class="card-header">
                     ${this.header}
                 </div>
-                <div class="card-body">
-                    <canvas id="${this.chartId}"></canvas>
+                <div class="card-body" style="max-height:400px;overflow-y:scroll;">
+                    <div class="row m-0 p-0">
+                        <div class="col-md-${this.chartCol}">
+                            <canvas id="${this.chartId}" height="${this.chartHeight}"></canvas>
+                        </div>
+                        <div class="col-md-${this.chartCol}">
+                            <div id="${this.chartId}-legend" class="legend-con"></div>
+                        </div>
+                    </div>
+                    
                 </div>
                 <div class="card-footer">
+                    
                     ${this.footer}
                 </div>
             </div>
@@ -117,11 +132,11 @@ function setAngles() {
 
 function scale() {
     width = $( ".col-md-6" ).width();
-    height = document.documentElement.clientHeight/2;
+    height = 600;
     canvas.attr('width', width).attr('height', height);
     projection.
     scale(scaleFactor * Math.min(width, height) / 2).
-    translate([width / 2, height / 2]);
+    translate([width / 2, height / 1.9]);
     render();
 }
 
@@ -277,28 +292,7 @@ loadData(function(world, cList) {
 //infografik
 var ctxL = document.getElementById("covidGlobal").getContext('2d');
 var ctxL2 = document.getElementById("covidIndonesia").getContext('2d');
-//var ctxL3 = document.getElementById("covidProvinsi").getContext('2d');
-
-    const gradientRed = ctxL.createLinearGradient(0, 0, 0, 290);
-
-    gradientRed.addColorStop(0, "rgba(231,74,59, 1)");
-
-    gradientRed.addColorStop(1, "rgba(184,16,0, 0.1)");
-
-
-    const gradientYellow = ctxL.createLinearGradient(0, 0, 0, 290);
-
-    gradientYellow.addColorStop(0, "rgba(250,214,2, 1)");
-
-    gradientYellow.addColorStop(1, "rgba(250,133,25, 0.1)");
-
-    const gradientGreen = ctxL.createLinearGradient(0, 0, 0, 290);
-
-    gradientGreen.addColorStop(0, "rgba(140,202,50, 1)");
-
-    gradientGreen.addColorStop(1, "rgba(60,151,101, 0.1)");
-
-    
+var ctxL3 = document.getElementById("covidCountry").getContext('2d');
 
 
     $.ajax({
@@ -314,7 +308,7 @@ var ctxL2 = document.getElementById("covidIndonesia").getContext('2d');
                   datasets: [
                     {
                       data: [res.Global.TotalConfirmed, res.Global.TotalDeaths, res.Global.TotalRecovered],
-                      backgroundColor: [gradientYellow,gradientRed,gradientGreen],
+                      backgroundColor: ["rgba(228,182,71, 1)","rgba(231,74,59, 1)","rgba(140,202,50, 1)"],
                       borderColor: [
                         '#0042ce',
                       ],
@@ -326,9 +320,25 @@ var ctxL2 = document.getElementById("covidIndonesia").getContext('2d');
                   ]
                 },
                 options: {
-                  responsive: true
+                  responsive: true,
+                  legend: false,
+                    legendCallback: function(chart) {
+                        var legendHtml = [];
+                        legendHtml.push('<ul class="list-group">');
+                        var item = chart.data.datasets[0];
+                        for (var i=0; i < item.data.length; i++) {
+                            legendHtml.push('<li class="list-group-item" style="background-color:' + item.backgroundColor[i] +'">');
+                            legendHtml.push('<span >' + item.data[i] + ' orang - '+chart.data.labels[i]);
+                            legendHtml.push('</li>');
+                        }
+
+                        legendHtml.push('</ul>');
+                        return legendHtml.join("");
+                    },
                 }
             });
+
+            $('#covidGlobal-legend').html(myLineChart.generateLegend());
 
             const di = findNegara("Indonesia")
             const myLineChart2 = new Chart(ctxL2, {
@@ -338,7 +348,7 @@ var ctxL2 = document.getElementById("covidIndonesia").getContext('2d');
                     datasets: [
                     {
                         data: [di.TotalConfirmed, di.TotalDeaths, di.TotalRecovered],
-                        backgroundColor: [gradientYellow,gradientRed,gradientGreen],
+                        backgroundColor: ["rgba(228,182,71, 1)","rgba(231,74,59, 1)","rgba(140,202,50, 1)"],
                         borderColor: [
                         '#0042ce',
                         ],
@@ -350,9 +360,99 @@ var ctxL2 = document.getElementById("covidIndonesia").getContext('2d');
                 },
             
                 options: {
-                    responsive: true
+                    responsive: true,
+                    legend: false,
+                    legendCallback: function(chart) {
+                        var legendHtml = [];
+                        legendHtml.push('<ul class="list-group">');
+                        var item = chart.data.datasets[0];
+                        for (var i=0; i < item.data.length; i++) {
+                            legendHtml.push('<li class="list-group-item" style="background-color:' + item.backgroundColor[i] +'">');
+                            legendHtml.push('<span >' + item.data[i] + ' orang - '+chart.data.labels[i]);
+                            legendHtml.push('</li>');
+                        }
+
+                        legendHtml.push('</ul>');
+                        return legendHtml.join("");
+                    },
+                    
                 }
             
+            });
+
+            $('#covidIndonesia-legend').html(myLineChart2.generateLegend());
+
+
+            var provLabel = [];
+            var provDataPositif = [];
+            var provDataSembuh = [];
+            var provDataMeninggal = [];
+            for (let index = 0; index < bigData.length; index++) {
+                const e = bigData[index];
+                provLabel.push(e.Country);
+                provDataPositif.push(e.TotalConfirmed);
+                provDataSembuh.push(e.TotalRecovered);
+                provDataMeninggal.push(e.TotalDeaths);
+                
+            }
+
+          
+            const myLineChart3 = new Chart(ctxL3, {
+                type: 'horizontalBar',
+                data: {
+                    labels: provLabel,
+                    datasets: [
+                    {   
+                        label:"Positif",
+                        data: provDataPositif,
+                        backgroundColor: "rgba(250,214,2, 1)",
+                        barPercentage: 0.8,
+                        barThickness: 10,
+                        maxBarThickness: 20,
+                        minBarLength: 2,
+                    
+                    },
+                    {   
+                        label:"Meninggal",
+                        data: provDataMeninggal,
+                        backgroundColor: "rgba(231,74,59, 1)",
+                        barPercentage: 0.8,
+                        barThickness: 10,
+                        maxBarThickness: 20,
+                        minBarLength: 2,
+                        
+                    },
+                    {   
+                        label:"Sembuh",
+                        data: provDataSembuh,
+                        backgroundColor: "rgba(140,202,50, 1)",
+                        barPercentage: 0.8,
+                        barThickness: 10,
+                        maxBarThickness: 20,
+                        minBarLength: 2,
+                        
+                    }
+                    ]
+                },
+        
+                options: {
+                    responsive: true,
+                    
+                    scales: {
+                        yAxes: [{
+                            beginAtZero: true,
+                            ticks: {
+                               autoSkip: false
+                            },
+                            stacked: true,
+                            barPercentage: 1.0,
+                            categoryPercentage: 1.0,
+                        }],
+                        xAxes: [{ stacked: true }],
+                        
+                      }
+                }
+        
             });
         }
     })
