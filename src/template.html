@@ -1,0 +1,57 @@
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+	<title>Status Virus Corona</title>
+
+</head>
+
+<body translate="no">
+	<header class="text-white bg-dark">
+		<nav class="navbar text-white bg-dark navbar-dark">
+			<a class="navbar-brand" href="#"></a>
+			  Infografis Virus Korona
+			</a>
+		  </nav>
+	</header>
+	<main>
+		<div class="row m-0 p-0">
+			<div class="col-md-6" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);border: solid 1px #0042ce;">
+				<p id="current"></p>
+				<canvas id="globe" ></canvas>
+			</div>
+			<div class="col-md-6 pt-4" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);border: solid 1px #0042ce;">
+				<div class="row">
+					<div class="col-md-12">
+						<grafik-chart chart-id="covidGlobal" header="Data Di Seluruh Dunia" footer="Sumber : <a href='https://api.covid19api.com/summary' target='_blank'>https://api.covid19api.com/summary</a>"></grafik-chart>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<div class="card text-white bg-dark mb-3">
+							<grafik-chart chart-id="covidIndonesia" header="Data Di Indonesia" footer="Sumber : <a href='https://api.kawalcorona.com/indonesia' target='_blank'>https://api.kawalcorona.com/indonesia</a>"></grafik-chart>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row m-0 mt-4">
+			<div class="col-md-12">
+				<div class="col-md-12">
+					<grafik-chart chart-id="covidProvinsi" header="Data Di Seluruh Provinsi" footer="Sumber : <a href='https://api.kawalcorona.com/provinsi' target='_blank'>https://api.kawalcorona.com/provinsi</a>"></grafik-chart>
+				</div>
+			</div>
+		</div>
+		
+		
+	</main>
+	
+
+	<footer class="text-center p-4">
+		&copy; Bagus Indrayana
+	</footer>
+	
+</body>
+
+</html>
