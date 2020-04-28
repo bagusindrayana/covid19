@@ -116,7 +116,7 @@ function setAngles() {
 }
 
 function scale() {
-    width = $( ".col-md-6" ).width() - 100;
+    width = $( ".col-md-6" ).width();
     height = document.documentElement.clientHeight/2;
     canvas.attr('width', width).attr('height', height);
     projection.
@@ -277,7 +277,7 @@ loadData(function(world, cList) {
 //infografik
 var ctxL = document.getElementById("covidGlobal").getContext('2d');
 var ctxL2 = document.getElementById("covidIndonesia").getContext('2d');
-var ctxL3 = document.getElementById("covidProvinsi").getContext('2d');
+//var ctxL3 = document.getElementById("covidProvinsi").getContext('2d');
 
     const gradientRed = ctxL.createLinearGradient(0, 0, 0, 290);
 
@@ -303,144 +303,161 @@ var ctxL3 = document.getElementById("covidProvinsi").getContext('2d');
 
     $.ajax({
         url:"https://api.covid19api.com/summary",
+        crossDomain: true,
+        dataType: 'json',
         success:function(res){
             bigData = res.Countries
             const myLineChart = new Chart(ctxL, {
-
                 type: 'pie',
-          
                 data: {
-          
                   labels: ["Positif", "Meninggal", "Sembuh"],
-          
                   datasets: [
-          
                     {
-          
                       data: [res.Global.TotalConfirmed, res.Global.TotalDeaths, res.Global.TotalRecovered],
-          
                       backgroundColor: [gradientYellow,gradientRed,gradientGreen],
-          
                       borderColor: [
-          
                         '#0042ce',
-          
                       ],
-          
                       borderWidth: 2,
-          
                       pointBorderColor: "#fff",
-          
                       pointBackgroundColor: "rgba(173, 53, 186, 0.1)",
           
                     }
-          
                   ]
-          
                 },
-          
                 options: {
                   responsive: true
                 }
-          
             });
-        }
-    })
 
-
-    $.ajax({
-        url:"https://api.kawalcorona.com/indonesia",
-        success:function(res){
-            const myLineChart = new Chart(ctxL2, {
+            const di = findNegara("Indonesia")
+            const myLineChart2 = new Chart(ctxL2, {
                 type: 'pie',
                 data: {
-                  labels: ["Positif", "Meninggal", "Sembuh"],
-                  datasets: [
+                    labels: ["Positif", "Meninggal", "Sembuh"],
+                    datasets: [
                     {
-                      data: [res[0].positif, res[0].meninggal, res[0].sembuh],
-                      backgroundColor: [gradientYellow,gradientRed,gradientGreen],
-                      borderColor: [
+                        data: [di.TotalConfirmed, di.TotalDeaths, di.TotalRecovered],
+                        backgroundColor: [gradientYellow,gradientRed,gradientGreen],
+                        borderColor: [
                         '#0042ce',
-                      ],
-                      borderWidth: 2,
-                      pointBorderColor: "#fff",
-                      pointBackgroundColor: "rgba(173, 53, 186, 0.1)",
+                        ],
+                        borderWidth: 2,
+                        pointBorderColor: "#fff",
+                        pointBackgroundColor: "rgba(173, 53, 186, 0.1)",
                     }
-                  ]
+                    ]
                 },
-          
-                options: {
-                  responsive: true
-                }
-          
-            });
             
+                options: {
+                    responsive: true
+                }
+            
+            });
         }
     })
 
 
-    $.ajax({
-        url:"https://api.kawalcorona.com/indonesia/provinsi",
-        success:function(res){
-            var provLabel = [];
-            var provDataPositif = [];
-            var provDataSembuh = [];
-            var provDataMeninggal = [];
-            for (let index = 0; index < res.length; index++) {
-                const e = res[index].attributes;
-                provLabel.push(e.Provinsi);
-                provDataPositif.push(e.Kasus_Posi);
-                provDataSembuh.push(e.Kasus_Semb);
-                provDataMeninggal.push(e.Kasus_Meni);
+
+    //api kawal corona kena cors
+
+    // $.ajax({
+    //     url:"https://api.kawalcorona.com/indonesia",
+    //     crossDomain: true,
+    //     dataType: 'jsonp',
+    //     success:function(res){
+    //         const myLineChart = new Chart(ctxL2, {
+    //             type: 'pie',
+    //             data: {
+    //               labels: ["Positif", "Meninggal", "Sembuh"],
+    //               datasets: [
+    //                 {
+    //                   data: [res[0].positif, res[0].meninggal, res[0].sembuh],
+    //                   backgroundColor: [gradientYellow,gradientRed,gradientGreen],
+    //                   borderColor: [
+    //                     '#0042ce',
+    //                   ],
+    //                   borderWidth: 2,
+    //                   pointBorderColor: "#fff",
+    //                   pointBackgroundColor: "rgba(173, 53, 186, 0.1)",
+    //                 }
+    //               ]
+    //             },
+          
+    //             options: {
+    //               responsive: true
+    //             }
+          
+    //         });
+            
+    //     }
+    // })
+
+
+    // $.ajax({
+    //     url:"https://api.kawalcorona.com/indonesia/provinsi",
+    //     crossDomain: true,
+    //     dataType: 'jsonp',
+    //     success:function(res){
+    //         var provLabel = [];
+    //         var provDataPositif = [];
+    //         var provDataSembuh = [];
+    //         var provDataMeninggal = [];
+    //         for (let index = 0; index < res.length; index++) {
+    //             const e = res[index].attributes;
+    //             provLabel.push(e.Provinsi);
+    //             provDataPositif.push(e.Kasus_Posi);
+    //             provDataSembuh.push(e.Kasus_Semb);
+    //             provDataMeninggal.push(e.Kasus_Meni);
                 
-            }
+    //         }
 
-            const myLineChart = new Chart(ctxL3, {
-                type: 'horizontalBar',
-                data: {
-                  labels: provLabel,
-                  datasets: [
-                    {
-                      data: provDataPositif,
-                      backgroundColor: gradientYellow,
-                      borderColor: [
-                        '#0042ce',
-                      ],
-                      borderWidth: 2,
-                      pointBorderColor: "#fff",
-                      pointBackgroundColor: "rgba(173, 53, 186, 0.1)",
-                    },
-                    {
-                        data: provDataMeninggal,
-                        backgroundColor: gradientRed,
-                        borderColor: [
-                          '#0042ce',
-                        ],
-                        borderWidth: 2,
-                        pointBorderColor: "#fff",
-                        pointBackgroundColor: "rgba(173, 53, 186, 0.1)",
-                      },
-                      {
-                        data: provDataSembuh,
-                        backgroundColor: gradientGreen,
-                        borderColor: [
-                          '#0042ce',
-                        ],
-                        borderWidth: 2,
-                        pointBorderColor: "#fff",
-                        pointBackgroundColor: "rgba(173, 53, 186, 0.1)",
-                      }
-                  ]
-                },
+    //         const myLineChart = new Chart(ctxL3, {
+    //             type: 'horizontalBar',
+    //             data: {
+    //               labels: provLabel,
+    //               datasets: [
+    //                 {
+    //                   data: provDataPositif,
+    //                   backgroundColor: gradientYellow,
+    //                   borderColor: [
+    //                     '#0042ce',
+    //                   ],
+    //                   borderWidth: 2,
+    //                   pointBorderColor: "#fff",
+    //                   pointBackgroundColor: "rgba(173, 53, 186, 0.1)",
+    //                 },
+    //                 {
+    //                     data: provDataMeninggal,
+    //                     backgroundColor: gradientRed,
+    //                     borderColor: [
+    //                       '#0042ce',
+    //                     ],
+    //                     borderWidth: 2,
+    //                     pointBorderColor: "#fff",
+    //                     pointBackgroundColor: "rgba(173, 53, 186, 0.1)",
+    //                   },
+    //                   {
+    //                     data: provDataSembuh,
+    //                     backgroundColor: gradientGreen,
+    //                     borderColor: [
+    //                       '#0042ce',
+    //                     ],
+    //                     borderWidth: 2,
+    //                     pointBorderColor: "#fff",
+    //                     pointBackgroundColor: "rgba(173, 53, 186, 0.1)",
+    //                   }
+    //               ]
+    //             },
           
-                options: {
-                  responsive: true
-                }
+    //             options: {
+    //               responsive: true
+    //             }
           
-            });
+    //         });
             
-        }
-    })
+    //     }
+    // })
 
     
 
