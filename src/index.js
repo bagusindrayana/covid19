@@ -102,10 +102,10 @@ var currentCountry;
 
 function enter(country) {
     const result = countryList.find(function(c) {
-        console.log(`Hasil : ${c.id} = ${country.id}`)
+        //console.log(`Hasil : ${c.id} = ${country.id}`)
         return parseInt(c.id,10) === parseInt(country.id,10);
     });
-    console.log("result",result)
+    //console.log("result",result)
     const d = findNegara(result && result.name || '')
     if(d){
         current.html(`Negara : ${d.Country} <br/>
@@ -204,7 +204,7 @@ function rotate(elapsed) {
 }
 
 function loadData(cb) {
-    console.log("Request..")
+    //console.log("Request..")
     d3.json("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json").then(function(world){
         d3.tsv("https://gist.githubusercontent.com/mbostock/4090846/raw/07e73f3c2d21558489604a0bc434b3a5cf41a867/world-country-names.tsv").then(function(countries){
             cb(world, countries);
